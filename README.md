@@ -12,6 +12,12 @@ struct StructType {
     var a_3: String?
 }
 
+// original Mirror
+let mirror = Mirror(reflecting: StructType.init())
+mirror.children.forEach({ print($0.label!) }    // print a_1, a_2, a_3
+
+
+// Now, SwiftMirror:
 let structMirror = SwiftMirror(type: StructType.self)
 structMirror.children.forEach({ print($0!) })   // print a_1, a_2, a_3
 ```
