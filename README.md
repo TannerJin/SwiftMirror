@@ -3,7 +3,7 @@
 
 ## Usage
 
-1. for Struct and Enum
+1. Struct and Enum
 
 ```swift
 struct StructType {
@@ -27,7 +27,7 @@ let enumMirror = SwiftMirror(type: EnumType.self)
 enumMirror.children.forEach({ print($0!) })   // print aa_1, aa_2, aa_3
 ```
 
-2. for Class
+2. Class
 
 ```swift
 class SuperClassType: NSObject {
