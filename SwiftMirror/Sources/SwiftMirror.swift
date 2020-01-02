@@ -12,13 +12,17 @@ public struct SwiftMirror {
     public typealias Child = String?
     
     public let children: [Child]
+    
     public let displayStyle: Mirror.DisplayStyle?
+    
+    private let superClass: Int?
+    
     public var superClassMirror: SwiftMirror? {
         get {
             getSuperClassMirror()
         }
     }
-    private let superClass: Int?
+    
     
     public init(type: Any.Type) {
         let pointer = unsafeBitCast(type, to: UnsafePointer<Int>.self)
@@ -58,24 +62,26 @@ public struct SwiftMirror {
     }
     
     private static func configureChildren(_ contextDescriptorPointer: UnsafeMutableRawPointer) -> [Child] {
+        // advance to TypeDescriptorHeader.fieldReflection
         let fieldReflectionPointer = contextDescriptorPointer.advanced(by: 4*MemoryLayout<Int32>.size)
         let fieldReflectionOffset = contextDescriptorPointer.assumingMemoryBound(to: TypeDescriptorHeader.self).pointee.fieldReflection
         
-        let fieldDescriptorPointer = fieldReflectionPointer.advanced(by: Int(fieldReflectionOffset))
+        let fieldDescriptorPointer = fieldReflectionPointer.advanced(by: Int(fieldReflectionOffset)).assumingMemoryBound(to: FieldDescriptor.self)
         
-        let fieldsCount = Int(fieldDescriptorPointer.assumingMemoryBound(to: FieldDescriptor.self).pointee.numFields)
-        let fieldRecordPointer = fieldDescriptorPointer.advanced(by: MemoryLayout<FieldDescriptor>.stride).assumingMemoryBound(to: FieldRecord.self)
+        let fieldsCount = Int(fieldDescriptorPointer.pointee.numFields)
+        let fieldRecordPointer = UnsafeMutableRawPointer(fieldDescriptorPointer.advanced(by: 1)).assumingMemoryBound(to: FieldRecord.self)
         
         var children = [Child](repeating: nil, count: fieldsCount)
         
         for i in 0..<fieldsCount {
             let fieldRecord = fieldRecordPointer.advanced(by: i)
-            let address = UnsafeRawPointer(fieldRecord) + 2*4
+            // advance to FieldRecord.fieldNameOffset
+            let address = UnsafeRawPointer(fieldRecord).advanced(by: 2*MemoryLayout<Int32>.size)
             let nameOffset = fieldRecord.pointee.fieldNameOffset
             
             let cStr = (address+Int(nameOffset)).assumingMemoryBound(to: UInt8.self)
             let str = String(cString: cStr)
-            children[i] = str
+            children[i] = str   // don't copy on write
         }
         
         return children

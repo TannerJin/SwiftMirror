@@ -15,4 +15,9 @@ struct TypeDescriptorHeader {
     let nameOffset: Int32
     let fieldTypes: Int32
     let fieldReflection: Int32
+    /* don't care
+     ·
+     ·
+     ·
+     */
 }

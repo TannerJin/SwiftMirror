@@ -75,19 +75,19 @@
 			isa = PBXGroup;
 			children = (
 				A9A7C05B23BE0E8900AF0E60 /* SwiftMirror.swift */,
-				A9A7C05C23BE0E8900AF0E60 /* MetaData */,
+				A9A7C05C23BE0E8900AF0E60 /* SwiftRuntime */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
 		};
-		A9A7C05C23BE0E8900AF0E60 /* MetaData */ = {
+		A9A7C05C23BE0E8900AF0E60 /* SwiftRuntime */ = {
 			isa = PBXGroup;
 			children = (
 				A9A7C05D23BE0E8900AF0E60 /* ContextDescriptor.swift */,
 				A9A7C05E23BE0E8900AF0E60 /* MetadataKind.swift */,
 				A9A7C05F23BE0E8900AF0E60 /* FieldDescriptor.swift */,
 			);
-			path = MetaData;
+			path = SwiftRuntime;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
