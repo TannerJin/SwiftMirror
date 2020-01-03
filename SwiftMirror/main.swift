@@ -37,7 +37,7 @@ print("")
 
 
 // MARK: - Class
-class SuperClassType: NSObject {
+class SuperClassType {
     var b_1: NSObject?
 }
 
