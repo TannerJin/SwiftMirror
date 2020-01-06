@@ -12,9 +12,15 @@ print("Hello, Mirror!\n")
 
 // MARK: - Struct
 struct StructType {
-    var a_1: String?
+    var a_1: String
     var a_2: Int?
-    var a_4: String?
+    var a_3: String?
+    var a_1_1: String?
+    var a_2_2: Int?
+    var a_3_3: String?
+    var a_1_1_1: String?
+    var a_2_2_2: Int?
+    var a_3_3_3: String?
 }
 
 print("Struct:")
@@ -37,7 +43,7 @@ print("")
 
 
 // MARK: - Class
-class SuperClassType {
+class SuperClassType: NSObject {
     var b_1: NSObject?
 }
 

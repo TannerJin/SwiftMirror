@@ -76,12 +76,12 @@ public struct SwiftMirror {
         for i in 0..<fieldsCount {
             let fieldRecord = fieldRecordPointer.advanced(by: i)
             // advance to FieldRecord.fieldNameOffset
-            let address = UnsafeRawPointer(fieldRecord).advanced(by: 2*MemoryLayout<Int32>.size)
-            let nameOffset = fieldRecord.pointee.fieldNameOffset
+            let fieldNameAddress = UnsafeRawPointer(fieldRecord).advanced(by: 2*MemoryLayout<Int32>.size)
+            let fieldNameOffset = Int(fieldRecord.pointee.fieldNameOffset)
             
-            let cStr = (address+Int(nameOffset)).assumingMemoryBound(to: UInt8.self)
-            let str = String(cString: cStr)
-            children[i] = str   // don't copy on write
+            let fieldNameCStr = (fieldNameAddress+fieldNameOffset).assumingMemoryBound(to: CChar.self)
+            let fieldName = String(cString: fieldNameCStr)
+            children[i] = fieldName   // doesn't copy on write
         }
         return children
     }
@@ -90,6 +90,7 @@ public struct SwiftMirror {
     private func getSuperClassMirror() -> SwiftMirror? {
         guard let superClassAddress = self.superClass, let pointer = UnsafePointer<Int>(bitPattern: superClassAddress) else { return nil }
         
+        // MemoryLayout of Any = (UInt64, UInt64, UInt64, UInt64)
         if let swiftObjectClass = objc_getClass("Swift._SwiftObject"), superClassAddress == unsafeBitCast(swiftObjectClass, to: (UInt64, UInt64, UInt64, UInt64).self).0 {
             return nil
         }
@@ -99,5 +100,3 @@ public struct SwiftMirror {
         return SwiftMirror(typePointer: pointer)
     }
 }
-
-
